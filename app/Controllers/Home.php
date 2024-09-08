@@ -2,19 +2,32 @@
 
 namespace App\Controllers;
 
+use App\Models\Bantuan;
+use App\Models\User;
+use App\Models\Zakat;
+use CodeIgniter\API\ResponseTrait;
+
 class Home extends BaseController
 {
+    use ResponseTrait;
     public function index(): string
     {
-        return view('welcome_message');
+        $bantuan = new Bantuan();
+        $zakat = new Zakat();
+        $data['title'] = 'Admin Dashboard';
+        $data['zakat'] = $zakat->orderBy('created_at', 'desc')->findAll();
+        $data['total_disalurkan'] = $bantuan->selectSum('total_bantuan')->findAll()[0]['total_bantuan'];
+        $data['total_dana'] = $zakat->orderBy('created_at', 'desc')->first()['saldo_akhir'];
+        $data['bantuan'] = $bantuan->asObject()->where('id_zakat !=', 0)->findAll();
+        return view('welcome_message', $data);
     }
     function login()
     {
-        $data['head'] = 'Login';
+        $data['title'] = 'Login';
         $session = \Config\Services::session();
         if ($session->get('login') === true) {
-            if ($session->get('role') == 'administrator') {
-                return redirect()->to('/administrator');
+            if ($session->get('role') == 'admin') {
+                return redirect()->to('/admin');
             } else {
                 return redirect()->to('/');
             }
@@ -22,7 +35,7 @@ class Home extends BaseController
             return view('login', $data);
         }
     }
-    function logint_aut()
+    function login_auth()
     {
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -53,14 +66,14 @@ class Home extends BaseController
                     'message' => 'email tidak ditemukan',
                 ];
             } else {
-                $get_email = $user->where('email', $get_email->email)->where('password', $password)->first();
+                $get_email = $user->where('email', $get_email['email'])->where('password', $password)->first();
                 if ($get_email) {
                     $session = \Config\Services::session();
                     $new_session = [
                         'login' => true,
-                        'email' => $get_email->email,
-                        'id' => $get_email->id,
-                        'role' => $get_email->role,
+                        'email' => $get_email['email'],
+                        'id' => $get_email['id'],
+                        'role' => $get_email['role'],
                     ];
                     $session->set($new_session);
                     $response = [

@@ -6,22 +6,22 @@ use CodeIgniter\Model;
 
 class User extends Model
 {
-    protected $table            = 'users';
-    protected $primaryKey       = 'id';
+    protected $table            = 'table_user';
+    protected $primaryKey       = 'id_user';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['id_user', 'username', 'password', 'role', 'created_at', 'updated_at'];
 
-    protected bool $allowEmptyInserts = false;
+    protected bool $allowEmptyInserts = true;
     protected bool $updateOnlyChanged = true;
 
     protected array $casts = [];
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

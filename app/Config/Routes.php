@@ -5,11 +5,25 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+$routes->set404Override(function () {
+    return view('404.php');
+});
 $routes->get('/', 'Home::index');
 $routes->get('logout', 'Home::logout');
 $routes->get('login', 'Home::login');
 $routes->post('login', 'Home::login_auth');
 $routes->group('admin', function (RouteCollection $routes) {
     $routes->get('/', 'Admin::index');
-    $routes->get('penyaluran', 'Admin::penyaluran');
+    $routes->get('kelola_zakat', 'Admin::kelola_zakat');
+    $routes->get('zakat/add', 'Admin::zakat_add');
+    $routes->post('zakat/add', 'Admin::zakat_store');
+    $routes->get('zakat/salurkan', 'Admin::zakat_salurkan');
+    $routes->post('dokumentasi', 'Admin::upload_dokumentasi');
+    $routes->post('dokumentasi/get', 'Admin::dokumentasi');
+    $routes->post('dokumentasi/spesifik', 'Admin::one_dokumentasi');
+    $routes->get('dokumentasi/delete/(:num)', 'Admin::delete_dokumentasi/$1');
+    $routes->post('bantuan/store', 'Admin::bantuan_store');
+    // sebaran
+    $routes->get('sebaran_penerima', 'Admin::sebaran_penerima');
+    $routes->get('sebaran_penerima/get', 'Admin::get_penerima_bantuan');
 });
