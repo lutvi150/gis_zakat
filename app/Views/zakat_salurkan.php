@@ -26,9 +26,18 @@
                         <p class="card-description">
                         </p>
                         <input type="text" id="id_bantuan" hidden name="id_bantuan" value="<?= $bantuan->id_bantuan ?>">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="">Peruntukan Bantuan</label>
                             <textarea name="peruntukan" id="peruntukan" class="form-control" rows="4"><?= $bantuan->peruntukan ?></textarea>
+                            <span class="text-error e-peruntukan"></span>
+                        </div> -->
+                        <div class="form-group">
+                            <label for="">Golongan Penerima</label>
+                            <select name="perintukan" class="form-control" id="peruntukan">
+                                <?php foreach ($peruntukan as $key => $value): ?>
+                                    <option <?= $value == $bantuan->peruntukan ? "selected" : "" ?> value="<?= $value ?>"><?= $value ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <span class="text-error e-peruntukan"></span>
                         </div>
                         <div class="form-group">
@@ -47,8 +56,8 @@
                             <label for="">Jenis Identitas</label>
                             <select class="form-control" name="jenis_identitas" id="jenis_identitas">
                                 <option <?= $bantuan->jenis_bantuan == 1 ? "selected" : "" ?> value="1">KTP</option>
-                                <option <?= $bantuan->jenis_bantuan == 2 ? "selected" : "" ?> value="2">SMP</option>
-                                <option <?= $bantuan->jenis_bantuan == 3 ? "selected" : "" ?> value="3">Kartu Keluar</option>
+                                <option <?= $bantuan->jenis_bantuan == 2 ? "selected" : "" ?> value="2">SIM</option>
+                                <option <?= $bantuan->jenis_bantuan == 3 ? "selected" : "" ?> value="3">Kartu Keluarga</option>
                                 <option <?= $bantuan->jenis_bantuan == 4 ? "selected" : "" ?> value="4">Lainnya</option>
                             </select> <span class="text-error e-jenis_identitas"></span>
                         </div>

@@ -49,17 +49,25 @@
                         </thead>
                         <tbody>
                             <?php foreach ($bantuan as $key => $value): ?>
+                                <?php if ($value->jenis_identitas == 1) {
+                                    $identitas = "KTP";
+                                } else if ($value->jenis_identitas == 2) {
+                                    $identitas = "SIM";
+                                } else if ($value->jenis_identitas == 3) {
+                                    $identitas = "Kertu Keluarga";
+                                } else {
+                                    $identitas = "Lainnya";
+                                } ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td><?= $value->peruntukan ?></td>
                                     <td><?= $value->jenis_bantuan ?></td>
-                                    <td>Nomor <?= $value->jenis_identitas ?> : <?= $value->nomor_identitas ?></td>
+                                    <td>Nomor <?= $identitas ?> : <?= $value->nomor_identitas ?></td>
                                     <td><?= $value->nama_penerima ?></td>
-                                    <td><?= number_format($value->total_bantuan) ?></td>
+                                    <td><?= number_format($value->total_bantuan)  ?></td>
                                     <td></td>
                                 </tr>
                             <?php endforeach ?>
-                        </tbody>
                     </table>
                 </div>
             </div>

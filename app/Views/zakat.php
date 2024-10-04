@@ -56,7 +56,7 @@
                                     <td>
                                         <button class="btn btn-outline-success btn-sm"><i class="mdi mdi-pencil"></i></button>
                                         <button class="btn btn-outline-danger btn-sm"><i class="mdi mdi-delete"></i></button>
-                                        <button class="btn btn-outline-info btn-sm"><i class="mdi mdi-map"></i></button>
+                                        <!-- <button class="btn btn-outline-info btn-sm"><i class="mdi mdi-map"></i></button> -->
                                     </td>
                                 <?php endforeach ?>
                                 </tr>

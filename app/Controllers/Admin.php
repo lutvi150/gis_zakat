@@ -68,6 +68,7 @@ class Admin extends BaseController
     {
         $data['title'] = 'Penyaluran Zakat';
         $bantuan = new Bantuan();
+        $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', ' Ibnu Sabil'];
         $check_bantuan = $bantuan->asObject()->where('id_zakat', 0)->orderBy('id_bantuan', 'desc')->first();
         if ($check_bantuan) {
             $data['bantuan'] = $check_bantuan;
