@@ -58,8 +58,8 @@
                                         <button class="btn btn-outline-danger btn-sm"><i class="mdi mdi-delete"></i></button>
                                         <!-- <button class="btn btn-outline-info btn-sm"><i class="mdi mdi-map"></i></button> -->
                                     </td>
-                                <?php endforeach ?>
                                 </tr>
+                            <?php endforeach ?>
                         </tbody>
                     </table>
                 </div>

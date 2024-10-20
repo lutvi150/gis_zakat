@@ -1,5 +1,5 @@
-<?= $this->include("head") ?>
-
+<?= $this->include("head"); ?>
+<?php $session = \Config\Services::session() ?>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -62,37 +62,53 @@
         <!-- partial:partials/_sidebar.html -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
-                <li class="nav-item nav-profile">
-                    <a href="#" class="nav-link">
-                        <div class="nav-profile-image">
-                            <img src="<?= base_url() ?>logo/icon-admin.png" alt="profile">
-                            <span class="login-status online"></span> <!--change to offline or busy as needed-->
-                        </div>
-                        <div class="nav-profile-text d-flex flex-column">
-                            <span class="font-weight-bold mb-2">Admin</span>
-                            <span class="text-secondary text-small">Admin Zakat</span>
-                        </div>
-                        <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('index.php/admin') ?>">
-                        <span class="menu-title">Dashboard</span>
-                        <i class="mdi mdi-home menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('index.php/admin/kelola_zakat') ?>">
-                        <span class="menu-title">Kelola Zakat</span>
-                        <i class="mdi mdi-contacts menu-icon"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('index.php/admin/sebaran_penerima') ?>">
-                        <span class="menu-title">Sebaran Penerima</span>
-                        <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-                    </a>
-                </li>
+                <?php if ($session->get('role') == 'admin'): ?>
+                    <li class="nav-item nav-profile">
+                        <a href="#" class="nav-link">
+                            <div class="nav-profile-image">
+                                <img src="<?= base_url() ?>logo/icon-admin.png" alt="profile">
+                                <span class="login-status online"></span> <!--change to offline or busy as needed-->
+                            </div>
+                            <div class="nav-profile-text d-flex flex-column">
+                                <span class="font-weight-bold mb-2">Admin</span>
+                                <span class="text-secondary text-small">Admin Zakat</span>
+                            </div>
+                            <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('index.php/admin') ?>">
+                            <span class="menu-title">Dashboard</span>
+                            <i class="mdi mdi-home menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('index.php/admin/kelola_zakat') ?>">
+                            <span class="menu-title">Kelola Zakat</span>
+                            <i class="mdi mdi-contacts menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('index.php/admin/sebaran_penerima') ?>">
+                            <span class="menu-title">Sebaran Penerima</span>
+                            <i class="mdi mdi-format-list-bulleted menu-icon"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('index.php/admin/data-kecamatan') ?>">
+                            <span class="menu-title">Data Kecamatan</span>
+                            <i class="mdi mdi-google-maps menu-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= base_url('index.php/admin/persentase') ?>">
+                            <span class="menu-title">Persen Penerima</span>
+                            <i class="mdi mdi-google-maps menu-icon"></i>
+                        </a>
+                    </li>
+                <?php elseif ($session->get('role') == 'user'): ?>
+                <?php endif; ?>
             </ul>
         </nav>
         <!-- partial -->

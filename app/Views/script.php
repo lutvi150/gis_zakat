@@ -9,6 +9,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
 <script src="<?= base_url('assets/form-master/dist/jquery.form.min.js') ?>"></script>
+<script src="<?= base_url() ?>assets/notiflix-Notiflix/dist/notiflix-3.2.7.min.js"></script>
 <script>
     let url = "<?= base_url('index.php/') ?>";
 </script>

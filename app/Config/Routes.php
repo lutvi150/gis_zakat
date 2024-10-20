@@ -12,7 +12,7 @@ $routes->get('/', 'Home::index');
 $routes->get('logout', 'Home::logout');
 $routes->get('login', 'Home::login');
 $routes->post('login', 'Home::login_auth');
-$routes->group('admin', function (RouteCollection $routes) {
+$routes->group('admin', ['filter' => ['admin']], function (RouteCollection $routes) {
     $routes->get('/', 'Admin::index');
     $routes->get('kelola_zakat', 'Admin::kelola_zakat');
     $routes->get('zakat/add', 'Admin::zakat_add');
@@ -26,4 +26,11 @@ $routes->group('admin', function (RouteCollection $routes) {
     // sebaran
     $routes->get('sebaran_penerima', 'Admin::sebaran_penerima');
     $routes->get('sebaran_penerima/get', 'Admin::get_penerima_bantuan');
+    // manage data kecamatan
+    $routes->get('data-kecamatan', 'Admin::kecamatan');
+    // persentase penerima
+    $routes->get('persentase', 'Admin::persentase_penerima');
+    $routes->post('persentase', 'Admin::persentase_penerima_update');
 });
+// use for admin in kecamatan
+$routes->group('admin/kecamatan', function (RouteCollection $routes) {});

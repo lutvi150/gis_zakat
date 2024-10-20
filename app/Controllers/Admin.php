@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Bantuan;
 use App\Models\Dokumentasi;
+use App\Models\Setting;
 use App\Models\Zakat;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -12,6 +13,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Admin extends BaseController
 {
     use ResponseTrait;
+    public function __construct(Type $var = null) {}
     public function index()
     {
         $bantuan = new Bantuan();
@@ -68,7 +70,7 @@ class Admin extends BaseController
     {
         $data['title'] = 'Penyaluran Zakat';
         $bantuan = new Bantuan();
-        $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', ' Ibnu Sabil'];
+        $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil'];
         $check_bantuan = $bantuan->asObject()->where('id_zakat', 0)->orderBy('id_bantuan', 'desc')->first();
         if ($check_bantuan) {
             $data['bantuan'] = $check_bantuan;
@@ -267,5 +269,139 @@ class Admin extends BaseController
             'data' => $get_bantuan
         ];
         return $this->respond($response, 200);
+    }
+    // use for user
+    function kecamatan()
+    {
+        $data['title'] = 'Data Kecamatan';
+        return view('kecamatan', $data);
+    }
+    // use for setting
+    function persentase_penerima()
+    {
+        $data['title'] = 'Persentase Penerima Zakat';
+        $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil', 'Mualaf'];
+        $setting = new Setting();
+        $zakat = new Zakat();
+        $data['total_dana'] = $zakat->orderBy('created_at', 'desc')->first()['saldo_akhir'];
+        $data['terbilang'] = $this->terbilang($data['total_dana']);
+        $check_setting = $setting->where('jenis_setting', 'penerima')->first();
+        if ($check_setting) {
+            $data['setting'] = json_decode($check_setting->value_setting, true);
+        } else {
+            foreach ($data['peruntukan'] as $peruntukan) {
+                $result[] = [
+                    'peruntukan' => str_replace(' ', '_', $peruntukan),
+                    'persentase' => 0,
+                    'total_dana' => 0,
+                ];
+            }
+            $insert = [
+                'jenis_setting' => 'penerima',
+                'value_setting' => json_encode($result),
+            ];
+            $setting->insert($insert);
+            $data['setting'] = $result;
+        };
+        $persentase = 0;
+        $total_zakat = 0;
+        foreach ($data['setting'] as $key => $value) {
+            $persentase += $value['persentase'];
+            $total_zakat += $value['total_dana'];
+        }
+        $data['persentase'] = $persentase;
+        $data['total_zakat'] = $total_zakat;
+        $session = \Config\Services::session();
+        $session->set('setting', $data['setting']);
+        // costume color
+        $data['color'] = ['table-info', 'table-warning', 'table-success', 'table-danger', 'table-primary', 'table-secondary', 'table-info', 'table-warning', 'table-success'];
+        return view('persentase_penerima', $data);
+        // return $this->respond($session->get('setting'), ResponseInterface::HTTP_OK);
+    }
+    // update persentase penerima
+    function persentase_penerima_update()
+    {
+        $peruntukan = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil', 'Mualaf'];
+        $total_dana = $this->request->getPost('total_dana');
+        $total = 0;
+        $total_zakat = 0;
+        foreach ($peruntukan as $key => $value) {
+            $persentase = (float)$this->request->getPost(str_replace(' ', '_', $value));
+            $dana = 0;
+            if ($persentase != null) {
+                $dana = round((($persentase / 100) * $total_dana), 2);
+            }
+            $total += $persentase;
+            $total_zakat += $dana;
+            $result[] = [
+                'peruntukan' => str_replace(' ', '_', $value),
+                'persentase' => $persentase,
+                'total_dana' => $dana,
+            ];
+        }
+        if ($total > 100 || $total < 0) {
+            $response = [
+                'status' => 'failed',
+                'message' => 'masukan persentase tidak valid atau melebih ketentuan',
+            ];
+        } else {
+
+            $setting = new Setting();
+            $update_setting = [
+                'jenis_setting' => 'penerima',
+                'value_setting' => json_encode($result),
+            ];
+            $setting->where('jenis_setting', 'penerima')->set($update_setting)->update();
+            $response = [
+                'status' => 'success',
+                'persentase' => $total,
+                'total_all' => $total_zakat,
+                'data' => $result,
+            ];
+        }
+        return $this->respond($response, ResponseInterface::HTTP_OK);
+    }
+    function updateArray(&$data, $peruntukan, $new_persentase, $new_total_dana)
+    {
+        foreach ($data as &$item) {
+            // Cek jika peruntukan sesuai dengan yang kita cari
+            if ($item["peruntukan"] === $peruntukan) {
+                // Update persentase dan total_dana
+                $item["persentase"] = (int)$new_persentase;
+                $item["total_dana"] = (int)$new_total_dana;
+                break; // Keluar dari loop setelah update
+            }
+        }
+        return $data;
+    }
+    function terbilang($angka)
+    {
+        $angka = abs($angka);
+        $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+        $temp = "";
+
+        if ($angka < 12) {
+            $temp = " " . $huruf[$angka];
+        } else if ($angka < 20) {
+            $temp = $this->terbilang($angka - 10) . " belas ";
+        } else if ($angka < 100) {
+            $temp = $this->terbilang($angka / 10) . " puluh " . $this->terbilang($angka % 10);
+        } else if ($angka < 200) {
+            $temp = " seratus " . $this->terbilang($angka - 100);
+        } else if ($angka < 1000) {
+            $temp = $this->terbilang($angka / 100) . " ratus " . $this->terbilang($angka % 100);
+        } else if ($angka < 2000) {
+            $temp = " seribu " . $this->terbilang($angka - 1000);
+        } else if ($angka < 1000000) {
+            $temp = $this->terbilang($angka / 1000) . " ribu " . $this->terbilang($angka % 1000);
+        } else if ($angka < 1000000000) {
+            $temp = $this->terbilang($angka / 1000000) . " juta " . $this->terbilang($angka % 1000000);
+        } else if ($angka < 1000000000000) {
+            $temp = $this->terbilang($angka / 1000000000) . " miliar " . $this->terbilang($angka % 1000000000);
+        } else if ($angka < 1000000000000000) {
+            $temp = $this->terbilang($angka / 1000000000000) . " triliun " . $this->terbilang($angka % 1000000000000);
+        }
+
+        return trim($temp);
     }
 }

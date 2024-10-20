@@ -16,4 +16,5 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="<?= base_url() ?>assets/images/favicon.png" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css">
+    <link rel="stylesheet" href="<?= base_url() ?>assets/notiflix-Notiflix/dist/notiflix-3.2.7.min.css">
 </head>
