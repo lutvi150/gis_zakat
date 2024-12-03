@@ -28,9 +28,10 @@ $routes->group('admin', ['filter' => ['admin']], function (RouteCollection $rout
     $routes->get('sebaran_penerima/get', 'Admin::get_penerima_bantuan');
     // manage data kecamatan
     $routes->get('data-kecamatan', 'Admin::kecamatan');
+    //manage data desa
+    $routes->get('data-desa/(:num)', 'Admin::desa/$1');
     // persentase penerima
     $routes->get('persentase', 'Admin::persentase_penerima');
     $routes->post('persentase', 'Admin::persentase_penerima_update');
 });
 // use for admin in kecamatan
-$routes->group('admin/kecamatan', function (RouteCollection $routes) {});

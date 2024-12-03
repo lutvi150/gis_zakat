@@ -3,12 +3,12 @@
 <div class="content-wrapper">
     <div class="page-header">
         <h3 class="page-title">
-            Data Kecamatan
+            Data Desa
         </h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">Data</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Data Kecamatan</li>
+                <li class="breadcrumb-item active" aria-current="page">Data Desa</li>
             </ol>
         </nav>
     </div>
@@ -25,7 +25,7 @@
                                     No.
                                 </th>
                                 <th>
-                                    Nama Kecamatan
+                                    Nama Desa
                                 </th>
                                 <th>
                                     Sebaran Penerima
@@ -39,11 +39,10 @@
                             <?php foreach ($kecamatan as $key => $value): ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
-                                    <td><?= $value->nama_kecamatan ?></td>
+                                    <td><?= $value->nama_desa ?></td>
                                     <td>0</td>
                                     <td>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-user"></i> Data Penerima</a>
+                                        <a href="<?= base_url('index.php/admin/detail-penerima-desa' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

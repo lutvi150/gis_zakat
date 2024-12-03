@@ -273,8 +273,23 @@ class Admin extends BaseController
     // use for user
     function kecamatan()
     {
+        $db = \Config\Database::connect();
         $data['title'] = 'Data Kecamatan';
+        $data['kecamatan'] = $db->table('table_kecamatan')->where(['id_kabupaten' => 1104])->select('nama_kecamatan, id')->get()->getResult();
+        // return $this->respond($data, ResponseInterface::HTTP_OK);
+        // exit;
         return view('kecamatan', $data);
+    }
+
+    // use for desa
+    function desa($id_kecamatan)
+    {
+        $db = \Config\Database::connect();
+        $data['title'] = 'Data Desa';
+
+        // return $this->respond($data, ResponseInterface::HTTP_OK);
+        // exit;
+        return view('desa', $data);
     }
     // use for setting
     function persentase_penerima()
