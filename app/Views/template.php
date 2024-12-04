@@ -88,15 +88,15 @@
                             <i class="mdi mdi-contacts menu-icon"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('index.php/admin/sebaran_penerima') ?>">
                             <span class="menu-title">Sebaran Penerima</span>
                             <i class="mdi mdi-format-list-bulleted menu-icon"></i>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" href="<?= base_url('index.php/admin/data-kecamatan') ?>">
-                            <span class="menu-title">Data Kecamatan</span>
+                            <span class="menu-title">Data Penerima Zakat</span>
                             <i class="mdi mdi-google-maps menu-icon"></i>
                         </a>
                     </li>

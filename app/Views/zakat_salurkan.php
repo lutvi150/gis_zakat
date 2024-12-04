@@ -72,6 +72,22 @@
                             <span class="text-error e-nama_penerima"></span>
                         </div>
                         <div class="form-group">
+                            <label for="">Kecamatan</label>
+                            <select class="form-control" name="kecamatan" id="kecamatan" onchange="get_desa()">
+                                <option value="">---Pilih Kecamanatan---</option>
+                                <?php foreach ($kecamatan as $key => $value): ?>
+                                    <option value="<?= $value->id ?>"><?= $value->nama_kecamatan ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <span class="text-error e-nama_penerima"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Desa</label>
+                            <select class="form-control" name="desa" id="desa">
+                            </select>
+                            <span class=" text-error e-nama_penerima"></span>
+                        </div>
+                        <div class="form-group">
                             <label for="">Total Bantuan</label>
                             <input type="text" class="form-control" id="total_bantuan" name="total_bantuan" placeholder="Total Bantuan" value="<?= $bantuan->total_bantuan ?>">
                             <span class="text-error e-total_bantuan"></span>
@@ -385,6 +401,28 @@
                 });
             }
         }).submit();
+    }
+    get_desa = () => {
+        let kecamatan = $("#kecamatan").children("option:selected").val();
+        $.ajax({
+            type: "GET",
+            url: url + "desa/" + kecamatan,
+            dataType: "JSON",
+            success: function(response) {
+                let html = '';
+                $.each(response.data, function(i, v) {
+                    html += `<option value="${v.id_desa}">${v.nama_desa}</option>`;
+                });
+                $("#desa").html(`<option value="">---Pilih Desa---</option>${html}`);
+            },
+            error: function(xhr, status, error) {
+                swal({
+                    title: "opssss!",
+                    text: "Ada kendala dengan sistem",
+                    icon: "error",
+                });
+            }
+        });
     }
 </script>
 <?= $this->endSection() ?>

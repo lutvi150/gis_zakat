@@ -34,4 +34,6 @@ $routes->group('admin', ['filter' => ['admin']], function (RouteCollection $rout
     $routes->get('persentase', 'Admin::persentase_penerima');
     $routes->post('persentase', 'Admin::persentase_penerima_update');
 });
+$routes->get('convert', 'Admin::convert_database');
+$routes->get('desa/(:num)', 'Admin::get_village/$1');
 // use for admin in kecamatan

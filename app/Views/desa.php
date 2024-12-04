@@ -36,7 +36,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($kecamatan as $key => $value): ?>
+                            <?php foreach ($desa as $key => $value): ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
                                     <td><?= $value->nama_desa ?></td>

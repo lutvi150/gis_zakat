@@ -68,9 +68,11 @@ class Admin extends BaseController
     }
     function zakat_salurkan()
     {
+        $db = \Config\Database::connect();
         $data['title'] = 'Penyaluran Zakat';
         $bantuan = new Bantuan();
         $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil'];
+        $data['kecamatan'] = $db->table('table_kecamatan')->get()->getResult();
         $check_bantuan = $bantuan->asObject()->where('id_zakat', 0)->orderBy('id_bantuan', 'desc')->first();
         if ($check_bantuan) {
             $data['bantuan'] = $check_bantuan;
@@ -90,6 +92,18 @@ class Admin extends BaseController
             ];
         }
         return view('zakat_salurkan', $data);
+    }
+    // use for get village
+    function get_village($id_kecamatan)
+    {
+        $db = \Config\Database::connect();
+        $desa = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->get()->getResult();
+        $response = [
+            'status' => 'success',
+            'message' => 'data ditemukan',
+            'data' => $desa
+        ];
+        return $this->respond($response, status: ResponseInterface::HTTP_OK);
     }
     // user for stire zakat
     function bantuan_store()
@@ -275,7 +289,7 @@ class Admin extends BaseController
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Data Kecamatan';
-        $data['kecamatan'] = $db->table('table_kecamatan')->where(['id_kabupaten' => 1104])->select('nama_kecamatan, id')->get()->getResult();
+        $data['kecamatan'] = $db->table('table_kecamatan')->select('nama_kecamatan, id')->get()->getResult();
         // return $this->respond($data, ResponseInterface::HTTP_OK);
         // exit;
         return view('kecamatan', $data);
@@ -286,10 +300,21 @@ class Admin extends BaseController
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Data Desa';
-
+        $data['desa'] = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->select('nama_desa, id')->get()->getResult();
         // return $this->respond($data, ResponseInterface::HTTP_OK);
         // exit;
         return view('desa', $data);
+    }
+    // convert database
+    function convert_database()
+    {
+        $db = \Config\Database::connect();
+        $kecamatan = $db->table('table_kecamatan')->where('id_kabupaten', 1104)->get()->getResult();
+        foreach ($kecamatan as $key => $value) {
+            $desa = $db->table('table_desa')->where('id_kecamatan', $value->id)->get()->getResult();
+            $db->table('table_desa_')->insertBatch($desa);
+        }
+        return $this->respond($desa, ResponseInterface::HTTP_OK);
     }
     // use for setting
     function persentase_penerima()
