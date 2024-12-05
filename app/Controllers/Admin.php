@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Bantuan;
 use App\Models\Dokumentasi;
+use App\Models\ModelUsulZakat;
 use App\Models\Setting;
 use App\Models\Zakat;
 use CodeIgniter\API\ResponseTrait;
@@ -13,7 +14,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Admin extends BaseController
 {
     use ResponseTrait;
-    public function __construct(Type $var = null) {}
+    public function __construct(Type $var = null)
+    {}
     public function index()
     {
         $bantuan = new Bantuan();
@@ -23,24 +25,97 @@ class Admin extends BaseController
         $data['total_dana'] = $zakat->orderBy('created_at', 'desc')->first()['saldo_akhir'];
         return view('dashboard', $data);
     }
-    function kelola_zakat()
+    public function kelola_zakat()
     {
         $data['title'] = 'Zakat';
         $zakat = new Zakat();
         $data['zakat'] = $zakat->orderBy('created_at', 'desc')->findAll();
         return view('zakat', $data);
     }
-    function zakat_add()
+    public function zakat_add()
     {
         $data['title'] = 'Tambah Zakat Masuk';
         return view('zakat_add', $data);
     }
-    function zakat_store()
+    public function zakat_add_detail()
+    {
+        $db = \Config\Database::connect();
+        $bantuan = new Bantuan();
+        $data['title'] = 'Tambah Data Penerima Zakat';
+        $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil'];
+        $data['kecamatan'] = $db->table('table_kecamatan')->get()->getResult();
+        return view('zakat_add_detail', $data);
+    }
+    public function zakat_add_detail_store()
+    {
+        $validation = \Config\Services::validation();
+        $validate = [
+            'peruntukan' => 'required',
+            'nama' => 'required',
+            'jenis_kelamin' => 'required',
+            'jenis_identitas' => 'required',
+            'nomor_identitas' => 'required|numeric|is_unique[table_usul_zakat.nomor_identitas]|min_length[16]|max_length[16]',
+            'kecamatan' => 'required',
+            'desa' => 'required',
+        ];
+        $rules = [
+            'peruntukan' => [
+                'required' => 'peruntukan tidak boleh kosong',
+            ],
+            'nama' => [
+                'required' => 'Nama tidak boleh kosong',
+            ],
+            'jenis_kelamin' => [
+                'required' => 'Jenis kelamin tidak boleh kosong',
+            ],
+            'jenis_identitas' => [
+                'required' => 'Jenis identitas tidak boleh kosong',
+            ],
+            'nomor_identitas' => [
+                'required' => 'Nomor identitas tidak boleh kosong',
+                'numeric' => 'Nomor identitas harus berupa angka',
+                'is_unique' => 'Nomor identitas sudah terdaftar',
+                'min_length' => 'Nomor identitas minimal 16 digit',
+                'max_length' => 'Nomor identitas maksimal 16 digit',
+            ],
+            'kecamatan' => [
+                'required' => 'Kecamatan tidak boleh kosong',
+            ],
+            'desa' => [
+                'required' => 'Desa tidak boleh kosong',
+            ]];
+        $validation->setRules($validate, $rules);
+        if (!$validation->withRequest($this->request)->run()) {
+            $response = [
+                'status' => 'validation_failed',
+                'message' => $validation->getErrors(),
+            ];
+        } else {
+            $insert = [
+                'peruntukan' => $this->request->getPost('peruntukan'),
+                'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
+                'jenis_identitas' => $this->request->getPost('jenis_identitas'),
+                'nomor_identitas' => $this->request->getPost('nomor_identitas'),
+                'nama' => $this->request->getPost('nama'),
+                'kecamatan' => $this->request->getPost('kecamatan'),
+                'desa' => $this->request->getPost('desa'),
+            ];
+            $zakat = new ModelUsulZakat();
+            $zakat->insert($insert);
+            $response = [
+                'status' => 'success',
+                'message' => 'Data penerima zakat berhasil ditambahkan',
+            ];
+
+        }
+        return $this->respond($response, 200);
+    }
+    public function zakat_store()
     {
         $validation = \Config\Services::validation();
         $validation->setRules([
             'keterangan' => 'required',
-            'total_dana' => 'required|numeric'
+            'total_dana' => 'required|numeric',
         ]);
         if (!$validation->withRequest($this->request)->run()) {
             $response = [
@@ -56,17 +131,17 @@ class Admin extends BaseController
                 'status' => 'K',
                 'total' => $this->request->getPost('total_dana'),
                 'tanggal_transaksi' => date('Y-m-d'),
-                'saldo_akhir' => $saldo_akhir + $this->request->getPost('total_dana')
+                'saldo_akhir' => $saldo_akhir + $this->request->getPost('total_dana'),
             ];
             $zakat->insert($insert);
             $response = [
                 'status' => 'success',
-                'message' => 'Zakat berhasil ditambahkan'
+                'message' => 'Zakat berhasil ditambahkan',
             ];
         }
         return $this->respond($response, 200);
     }
-    function zakat_salurkan()
+    public function zakat_salurkan()
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Penyaluran Zakat';
@@ -79,7 +154,7 @@ class Admin extends BaseController
         } else {
             $bantuan->insert(['id_zakat' => 0]);
             $id_bantuan = $bantuan->getInsertID();
-            $data['bantuan'] = (object)[
+            $data['bantuan'] = (object) [
                 'id_bantuan' => $id_bantuan,
                 'id_zakat' => 0,
                 'peruntukan' => '',
@@ -88,25 +163,25 @@ class Admin extends BaseController
                 'penerima_bantuan' => '',
                 'jenis_identitas' => '',
                 'nomor_identitas' => '',
-                'nama_penerima' => ''
+                'nama_penerima' => '',
             ];
         }
         return view('zakat_salurkan', $data);
     }
     // use for get village
-    function get_village($id_kecamatan)
+    public function get_village($id_kecamatan)
     {
         $db = \Config\Database::connect();
         $desa = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->get()->getResult();
         $response = [
             'status' => 'success',
             'message' => 'data ditemukan',
-            'data' => $desa
+            'data' => $desa,
         ];
         return $this->respond($response, status: ResponseInterface::HTTP_OK);
     }
     // user for stire zakat
-    function bantuan_store()
+    public function bantuan_store()
     {
         $validation = \Config\Services::validation();
         $validation->setRules([
@@ -142,7 +217,7 @@ class Admin extends BaseController
                         'status' => 'D',
                         'total' => $total,
                         'tanggal_transaksi' => date('Y-m-d'),
-                        'saldo_akhir' => $saldo_akhir - $total
+                        'saldo_akhir' => $saldo_akhir - $total,
                     ];
                     $zakat->insert($insert);
                     $id_zakat = $zakat->getInsertID();
@@ -162,28 +237,28 @@ class Admin extends BaseController
                     $bantuan->update($id_bantuan, $insert_bantuan);
                     $response = [
                         'status' => 'success',
-                        'message' => 'Zakat berhasil ditambahkan'
+                        'message' => 'Zakat berhasil ditambahkan',
                     ];
                 } else {
                     $response = [
                         'status' => 'failed',
-                        'message' => 'Dokumentasi tidak ada'
+                        'message' => 'Dokumentasi tidak ada',
                     ];
                 }
             } else {
                 $response = [
                     'status' => 'failed',
-                    'message' => 'lokasi belum di pilih'
+                    'message' => 'lokasi belum di pilih',
                 ];
             }
         }
         return $this->respond($response, 200);
     }
-    function zakat_edit($id_zakat)
+    public function zakat_edit($id_zakat)
     {
         $data['title'] = 'Edit Zakat Masuk';
     }
-    function dokumentasi()
+    public function dokumentasi()
     {
         $dokumentasi = new Dokumentasi();
         $id_bantuan = $this->request->getPost('id_bantuan');
@@ -191,11 +266,11 @@ class Admin extends BaseController
         $response = [
             'status' => 'success',
             'message' => 'data ditemukan',
-            'data' => $get_dokumentasi
+            'data' => $get_dokumentasi,
         ];
         return $this->respond($response, 200);
     }
-    function delete_dokumentasi($id_dokumentasi)
+    public function delete_dokumentasi($id_dokumentasi)
     {
         $dokumentasi = new Dokumentasi();
         $get_dokumentasi = $dokumentasi->asObject()->where('id_dokumentasi', $id_dokumentasi)->first();
@@ -212,7 +287,7 @@ class Admin extends BaseController
         ];
         return $this->respond($response, 200);
     }
-    function one_dokumentasi()
+    public function one_dokumentasi()
     {
         $dokumentasi = new Dokumentasi();
         $id_dokumentasi = $this->request->getPost('id_dokumentasi');
@@ -220,11 +295,11 @@ class Admin extends BaseController
         $response = [
             'status' => 'success',
             'message' => 'data ditemukan',
-            'data' => $get_dokumentasi
+            'data' => $get_dokumentasi,
         ];
         return $this->respond($response, 200);
     }
-    function upload_dokumentasi()
+    public function upload_dokumentasi()
     {
         $dokumentasi = new Dokumentasi();
         $file = $this->request->getFile('dokumentasi');
@@ -257,7 +332,7 @@ class Admin extends BaseController
             $file->move(ROOTPATH . 'public/uploads/dokumentasi', $filename);
             $insert = [
                 'dokumentasi' => "uploads/dokumentasi/" . $filename,
-                'id_bantuan' =>  $this->request->getPost('id_bantuan'),
+                'id_bantuan' => $this->request->getPost('id_bantuan'),
             ];
             $store = $dokumentasi->insert($insert);
             $response = [
@@ -267,25 +342,25 @@ class Admin extends BaseController
         }
         return $this->respond($response, 200);
     }
-    function sebaran_penerima()
+    public function sebaran_penerima()
     {
         $bantuan = new Bantuan();
         $data['title'] = 'Sebaran Penerima Zakat';
         $data['bantuan'] = $bantuan->asObject()->where('id_zakat !=', 0)->findAll();
         return view('sebaran_penerima', $data);
     }
-    function get_penerima_bantuan()
+    public function get_penerima_bantuan()
     {
         $bantuan = new Bantuan();
         $get_bantuan = $bantuan->asObject()->where('id_zakat !=', 0)->findAll();
         $response = [
             'status' => 'success',
-            'data' => $get_bantuan
+            'data' => $get_bantuan,
         ];
         return $this->respond($response, 200);
     }
     // use for user
-    function kecamatan()
+    public function kecamatan()
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Data Kecamatan';
@@ -296,7 +371,7 @@ class Admin extends BaseController
     }
 
     // use for desa
-    function desa($id_kecamatan)
+    public function desa($id_kecamatan)
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Data Desa';
@@ -306,7 +381,7 @@ class Admin extends BaseController
         return view('desa', $data);
     }
     // convert database
-    function convert_database()
+    public function convert_database()
     {
         $db = \Config\Database::connect();
         $kecamatan = $db->table('table_kecamatan')->where('id_kabupaten', 1104)->get()->getResult();
@@ -317,7 +392,7 @@ class Admin extends BaseController
         return $this->respond($desa, ResponseInterface::HTTP_OK);
     }
     // use for setting
-    function persentase_penerima()
+    public function persentase_penerima()
     {
         $data['title'] = 'Persentase Penerima Zakat';
         $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil', 'Mualaf'];
@@ -359,14 +434,14 @@ class Admin extends BaseController
         // return $this->respond($session->get('setting'), ResponseInterface::HTTP_OK);
     }
     // update persentase penerima
-    function persentase_penerima_update()
+    public function persentase_penerima_update()
     {
         $peruntukan = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil', 'Mualaf'];
         $total_dana = $this->request->getPost('total_dana');
         $total = 0;
         $total_zakat = 0;
         foreach ($peruntukan as $key => $value) {
-            $persentase = (float)$this->request->getPost(str_replace(' ', '_', $value));
+            $persentase = (float) $this->request->getPost(str_replace(' ', '_', $value));
             $dana = 0;
             if ($persentase != null) {
                 $dana = round((($persentase / 100) * $total_dana), 2);
@@ -401,20 +476,20 @@ class Admin extends BaseController
         }
         return $this->respond($response, ResponseInterface::HTTP_OK);
     }
-    function updateArray(&$data, $peruntukan, $new_persentase, $new_total_dana)
+    public function updateArray(&$data, $peruntukan, $new_persentase, $new_total_dana)
     {
         foreach ($data as &$item) {
             // Cek jika peruntukan sesuai dengan yang kita cari
             if ($item["peruntukan"] === $peruntukan) {
                 // Update persentase dan total_dana
-                $item["persentase"] = (int)$new_persentase;
-                $item["total_dana"] = (int)$new_total_dana;
+                $item["persentase"] = (int) $new_persentase;
+                $item["total_dana"] = (int) $new_total_dana;
                 break; // Keluar dari loop setelah update
             }
         }
         return $data;
     }
-    function terbilang($angka)
+    public function terbilang($angka)
     {
         $angka = abs($angka);
         $huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
