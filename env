@@ -1,3 +1,8 @@
+app_name="GIS Zakat";
+app_owner="SAFRIKA SYAHPUTRA";
+satker="Baitul Mal Kab. Aceh Tengah"
+google_api_key="AIzaSyDKECBHxyBJiJIRwNaCEuC92j0OjmOLW1c"
+google_map_id="3c1f9449e4583cdc"
 #--------------------------------------------------------------------
 # Example Environment Configuration file
 #
@@ -14,7 +19,7 @@
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
-# CI_ENVIRONMENT = production
+CI_ENVIRONMENT = development
 
 #--------------------------------------------------------------------
 # APP
@@ -30,13 +35,13 @@
 # DATABASE
 #--------------------------------------------------------------------
 
-# database.default.hostname = localhost
-# database.default.database = ci4
-# database.default.username = root
-# database.default.password = root
-# database.default.DBDriver = MySQLi
-# database.default.DBPrefix =
-# database.default.port = 3306
+database.default.hostname = localhost
+database.default.database = zakat
+database.default.username = root
+database.default.password = 
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
 
 # If you use MySQLi as tests, first update the values of Config\Database::$tests.
 # database.tests.hostname = localhost

@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               8.0.30 - MySQL Community Server - GPL
+-- Server version:               5.7.24 - MySQL Community Server (GPL)
 -- Server OS:                    Win64
--- HeidiSQL Version:             12.8.0.6908
+-- HeidiSQL Version:             12.8.0.6935
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -15,35 +15,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Dumping structure for table zakat.migrations
-DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE IF NOT EXISTS `migrations` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `version` varchar(255) NOT NULL,
   `class` varchar(255) NOT NULL,
   `group` varchar(255) NOT NULL,
   `namespace` varchar(255) NOT NULL,
-  `time` int NOT NULL,
-  `batch` int unsigned NOT NULL,
+  `time` int(11) NOT NULL,
+  `batch` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table zakat.migrations: ~6 rows (approximately)
+-- Dumping data for table zakat.migrations: ~5 rows (approximately)
 INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
 	(1, '2024-09-07-102114', 'App\\Database\\Migrations\\TableUser', 'default', 'App', 1725704612, 1),
 	(2, '2024-09-07-112138', 'App\\Database\\Migrations\\TableZakat', 'default', 'App', 1725708625, 2),
 	(3, '2024-09-07-141659', 'App\\Database\\Migrations\\TableDokumentasi', 'default', 'App', 1725719173, 3),
 	(4, '2024-09-07-142045', 'App\\Database\\Migrations\\TableBantuan', 'default', 'App', 1725719173, 3),
 	(5, '2024-10-20-160406', 'App\\Database\\Migrations\\TableSetting', 'default', 'App', 1729448776, 4),
-	(6, '2024-12-05-103140', 'App\\Database\\Migrations\\TableUsulZakat', 'default', 'App', 1733394868, 5);
+	(6, '2024-12-05-103140', 'App\\Database\\Migrations\\TableUsulZakat', 'default', 'App', 1733413384, 5);
 
 -- Dumping structure for table zakat.table_bantuan
-DROP TABLE IF EXISTS `table_bantuan`;
 CREATE TABLE IF NOT EXISTS `table_bantuan` (
-  `id_bantuan` int NOT NULL AUTO_INCREMENT,
-  `id_zakat` int NOT NULL,
+  `id_bantuan` int(5) NOT NULL AUTO_INCREMENT,
+  `id_zakat` int(5) NOT NULL,
   `peruntukan` text NOT NULL,
   `jenis_bantuan` varchar(255) NOT NULL,
-  `total_bantuan` int NOT NULL,
+  `total_bantuan` int(11) NOT NULL,
   `penerima_bantuan` varchar(500) NOT NULL,
   `jenis_identitas` varchar(50) NOT NULL,
   `nomor_identitas` varchar(50) NOT NULL,
@@ -55,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `table_bantuan` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_bantuan`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table zakat.table_bantuan: ~9 rows (approximately)
 INSERT INTO `table_bantuan` (`id_bantuan`, `id_zakat`, `peruntukan`, `jenis_bantuan`, `total_bantuan`, `penerima_bantuan`, `jenis_identitas`, `nomor_identitas`, `latitude`, `longitude`, `nama_penerima`, `kecamatan`, `desa`, `created_at`, `updated_at`) VALUES
@@ -70,7 +68,6 @@ INSERT INTO `table_bantuan` (`id_bantuan`, `id_zakat`, `peruntukan`, `jenis_bant
 	(10, 0, '', '', 0, '', '', '', '', '', '', '', '', '2024-10-09 13:30:31', '2024-10-09 13:30:31');
 
 -- Dumping structure for table zakat.table_desa
-DROP TABLE IF EXISTS `table_desa`;
 CREATE TABLE IF NOT EXISTS `table_desa` (
   `id` char(50) DEFAULT NULL,
   `id_kecamatan` char(50) DEFAULT NULL,
@@ -376,15 +373,14 @@ INSERT INTO `table_desa` (`id`, `id_kecamatan`, `nama_desa`) VALUES
 	('1104212016', '110421', 'Lut Jaya');
 
 -- Dumping structure for table zakat.table_dokumentasi
-DROP TABLE IF EXISTS `table_dokumentasi`;
 CREATE TABLE IF NOT EXISTS `table_dokumentasi` (
-  `id_dokumentasi` int NOT NULL AUTO_INCREMENT,
-  `id_bantuan` int NOT NULL,
+  `id_dokumentasi` int(5) NOT NULL AUTO_INCREMENT,
+  `id_bantuan` int(11) NOT NULL,
   `dokumentasi` varchar(255) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_dokumentasi`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table zakat.table_dokumentasi: ~9 rows (approximately)
 INSERT INTO `table_dokumentasi` (`id_dokumentasi`, `id_bantuan`, `dokumentasi`, `created_at`, `updated_at`) VALUES
@@ -399,7 +395,6 @@ INSERT INTO `table_dokumentasi` (`id_dokumentasi`, `id_bantuan`, `dokumentasi`, 
 	(15, 9, 'uploads/dokumentasi/241009013021_1728455421_20877e49297ca394b118.jpg', '2024-10-09 13:30:21', '2024-10-09 13:30:21');
 
 -- Dumping structure for table zakat.table_kecamatan
-DROP TABLE IF EXISTS `table_kecamatan`;
 CREATE TABLE IF NOT EXISTS `table_kecamatan` (
   `id` char(50) DEFAULT NULL,
   `nama_kecamatan` varchar(200) DEFAULT NULL
@@ -423,24 +418,22 @@ INSERT INTO `table_kecamatan` (`id`, `nama_kecamatan`) VALUES
 	('110421', 'Rusip Antara');
 
 -- Dumping structure for table zakat.table_setting
-DROP TABLE IF EXISTS `table_setting`;
 CREATE TABLE IF NOT EXISTS `table_setting` (
-  `id_setting` int NOT NULL AUTO_INCREMENT,
+  `id_setting` int(5) NOT NULL AUTO_INCREMENT,
   `jenis_setting` varchar(255) NOT NULL,
   `value_setting` text NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_setting`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table zakat.table_setting: ~1 rows (approximately)
+-- Dumping data for table zakat.table_setting: ~0 rows (approximately)
 INSERT INTO `table_setting` (`id_setting`, `jenis_setting`, `value_setting`, `created_at`, `updated_at`) VALUES
 	(1, 'penerima', '[{"peruntukan":"Fakir","persentase":10,"total_dana":1961018000},{"peruntukan":"Miskin","persentase":30,"total_dana":5883054000},{"peruntukan":"Amil","persentase":12,"total_dana":2353221600},{"peruntukan":"Riqab","persentase":5,"total_dana":980509000},{"peruntukan":"Gharim","persentase":12,"total_dana":2353221600},{"peruntukan":"Fisabilillah","persentase":15,"total_dana":2941527000},{"peruntukan":"Ibnu_Sabil","persentase":15,"total_dana":2941527000},{"peruntukan":"Mualaf","persentase":1,"total_dana":196101800}]', '0000-00-00 00:00:00', NULL);
 
 -- Dumping structure for table zakat.table_user
-DROP TABLE IF EXISTS `table_user`;
 CREATE TABLE IF NOT EXISTS `table_user` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(5) NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -449,25 +442,57 @@ CREATE TABLE IF NOT EXISTS `table_user` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table zakat.table_user: ~1 rows (approximately)
+-- Dumping data for table zakat.table_user: ~0 rows (approximately)
 INSERT INTO `table_user` (`id`, `nama`, `email`, `password`, `role`, `last_login`, `created_at`, `updated_at`) VALUES
 	(1, 'Admin', 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', '2024-09-07 17:23:41', '2024-09-07 17:23:41', NULL);
 
+-- Dumping structure for table zakat.table_usul_zakat
+CREATE TABLE IF NOT EXISTS `table_usul_zakat` (
+  `id_usul` int(5) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) NOT NULL,
+  `peruntukan` varchar(50) NOT NULL,
+  `jenis_kelamin` varchar(5) NOT NULL,
+  `jenis_identitas` varchar(10) NOT NULL,
+  `nomor_identitas` varchar(20) NOT NULL,
+  `kecamatan` varchar(20) NOT NULL,
+  `desa` varchar(20) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id_usul`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
+
+-- Dumping data for table zakat.table_usul_zakat: ~15 rows (approximately)
+INSERT INTO `table_usul_zakat` (`id_usul`, `nama`, `peruntukan`, `jenis_kelamin`, `jenis_identitas`, `nomor_identitas`, `kecamatan`, `desa`, `created_at`, `updated_at`) VALUES
+	(1, 'HAMZAH,S.E BIN NURDIN', 'Fakir', 'L', '1', '1194116806970002', '110408', '1104082006', '0000-00-00 00:00:00', NULL),
+	(2, 'SAIPI', 'Miskin', 'P', '1', '1194116806970001', '110408', '1104082006', '2024-12-05 22:48:44', NULL),
+	(3, 'SAJARMAAN', 'Fakir', 'L', '1', '1194116806790002', '110408', '1104082006', '2024-12-05 22:50:10', NULL),
+	(4, 'SAJARUDDIN', 'Amil', 'L', '1', '1194116806710002', '110408', '1104082002', '2024-12-05 22:50:44', NULL),
+	(5, 'SAKDIA LOGA', 'Fisabilillah', 'P', '1', '1194116806700002', '110408', '1104082002', '2024-12-05 22:51:45', NULL),
+	(6, 'SAKINAH WAHYUNI', 'Fisabilillah', 'L', '1', '1194116806790005', '110408', '1104082006', '2024-12-05 22:52:37', NULL),
+	(7, 'SALMANDI FUTRA', 'Miskin', 'L', '1', '1194116806710003', '110408', '1104082001', '2024-12-05 22:55:31', NULL),
+	(8, 'SALMAWATI', 'Fisabilillah', 'L', '1', '1194116806670001', '110408', '1104082001', '2024-12-05 22:56:02', NULL),
+	(9, 'SALWANDI', 'Fisabilillah', 'L', '1', '1194116806870002', '110408', '1104082002', '2024-12-05 22:56:53', NULL),
+	(10, 'SAMIAH', 'Fakir', 'P', '1', '1194116806660002', '110408', '1104082001', '2024-12-05 22:57:22', NULL),
+	(11, 'SAMSIAH', 'Fakir', 'L', '1', '1194116806600002', '110408', '1104082001', '2024-12-05 22:58:03', NULL),
+	(12, 'SARAH MAULI', 'Gharim', 'P', '1', '1194116803790002', '110408', '1104082001', '2024-12-05 22:58:56', NULL),
+	(13, 'SARAIYAH', 'Miskin', 'P', '1', '1194116806710004', '110408', '1104082001', '2024-12-05 23:01:35', NULL),
+	(14, 'SARIDAH CUT', 'Miskin', 'P', '1', '1194116806790006', '110408', '1104082002', '2024-12-05 23:02:33', NULL),
+	(15, 'SARMILAWATI', 'Fakir', 'P', '1', '1194116806790003', '110408', '1104082006', '2024-12-05 23:03:29', NULL);
+
 -- Dumping structure for table zakat.table_zakat
-DROP TABLE IF EXISTS `table_zakat`;
 CREATE TABLE IF NOT EXISTS `table_zakat` (
-  `id_zakat` int NOT NULL AUTO_INCREMENT,
+  `id_zakat` int(5) NOT NULL AUTO_INCREMENT,
   `keterangan` text NOT NULL,
   `status` varchar(5) NOT NULL,
-  `total` bigint NOT NULL,
-  `saldo_akhir` bigint NOT NULL,
+  `total` bigint(20) NOT NULL,
+  `saldo_akhir` bigint(20) NOT NULL,
   `tanggal_transaksi` varchar(50) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_zakat`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table zakat.table_zakat: ~15 rows (approximately)
 INSERT INTO `table_zakat` (`id_zakat`, `keterangan`, `status`, `total`, `saldo_akhir`, `tanggal_transaksi`, `created_at`, `updated_at`) VALUES

@@ -1,5 +1,5 @@
-<?=$this->extend('template')?>
-<?=$this->section('content')?>
+<?= $this->extend('template') ?>
+<?= $this->section('content') ?>
 <style>
     #map {
         height: 700px;
@@ -29,8 +29,8 @@
                             <label for="">Golongan Penerima</label>
                             <select name="peruntukan" class="form-control" id="peruntukan">
                                 <?php foreach ($peruntukan as $key => $value): ?>
-                                    <option  value="<?=$value?>"><?=$value?></option>
-                                <?php endforeach;?>
+                                    <option value="<?= $value ?>"><?= $value ?></option>
+                                <?php endforeach; ?>
                             </select>
                             <span class="text-error e-peruntukan"></span>
                         </div>
@@ -44,16 +44,16 @@
                             <label for="">Jenis Kelamin</label>
                             <select class="form-control" name="jenis_kelamin" id="jenis_kelamin">
                                 <option value="L">Laki-Laki</option>
-                                <option  value="P">Perempuan</option>
+                                <option value="P">Perempuan</option>
                             </select> <span class="text-error e-jenis_kelamin"></span>
                         </div>
                         <div class="form-group">
                             <label for="">Jenis Identitas</label>
                             <select class="form-control" name="jenis_identitas" id="jenis_identitas">
                                 <option value="1">KTP</option>
-                                <option  value="2">SIM</option>
+                                <option value="2">SIM</option>
                                 <option value="3">Kartu Keluarga</option>
-                                <option  value="4">Lainnya</option>
+                                <option value="4">Lainnya</option>
                             </select> <span class="text-error e-jenis_identitas"></span>
                         </div>
                         <div class="form-group">
@@ -66,8 +66,8 @@
                             <select class="form-control" name="kecamatan" id="kecamatan" onchange="get_desa()">
                                 <option value="">---Pilih Kecamanatan---</option>
                                 <?php foreach ($kecamatan as $key => $value): ?>
-                                    <option value="<?=$value->id?>"><?=$value->nama_kecamatan?></option>
-                                <?php endforeach;?>
+                                    <option value="<?= $value->id ?>"><?= $value->nama_kecamatan ?></option>
+                                <?php endforeach; ?>
                             </select>
                             <span class="text-error e-kecamatan"></span>
                         </div>
@@ -136,7 +136,7 @@
             <div class="card">
                 <div class="card-body">
                     <button type="button" class="btn btn-gradient-primary mr-2" onclick="store()">Simpan</button>
-                    <a class="btn btn-light" href="<?=base_url('index.php/admin/data-kecamatan')?>">Kembali</a>
+                    <a class="btn btn-light" href="<?= base_url('index.php/admin/data-kecamatan') ?>">Kembali</a>
                 </div>
             </div>
         </div>
@@ -164,8 +164,8 @@
         </div>
     </div>
 </div>
-<?=$this->endSection()?>
-<?=$this->section('script')?>
+<?= $this->endSection() ?>
+<?= $this->section('script') ?>
 <script>
     $(document).ready(function() {
         sessionStorage.clear();
@@ -221,7 +221,7 @@
         });
     }
     priview = (id) => {
-        let base_url = "<?=base_url()?>"
+        let base_url = "<?= base_url() ?>"
         $.ajax({
             type: "POST",
             url: url + "admin/dokumentasi/spesifik",
@@ -288,7 +288,9 @@
                         text: response.message,
                         icon: "success",
                     })
-                    location.reload();
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
                 } else {
                     swal({
                         title: "opssss!",
@@ -315,7 +317,7 @@
             success: function(response) {
                 let html = '';
                 $.each(response.data, function(i, v) {
-                    html += `<option value="${v.id_desa}">${v.nama_desa}</option>`;
+                    html += `<option value="${v.id}">${v.nama_desa}</option>`;
                 });
                 $("#desa").html(`<option value="">---Pilih Desa---</option>${html}`);
             },
@@ -329,4 +331,4 @@
         });
     }
 </script>
-<?=$this->endSection()?>
+<?= $this->endSection() ?>

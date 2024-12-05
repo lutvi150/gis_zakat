@@ -14,8 +14,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Admin extends BaseController
 {
     use ResponseTrait;
-    public function __construct(Type $var = null)
-    {}
+    public function __construct(Type $var = null) {}
     public function index()
     {
         $bantuan = new Bantuan();
@@ -83,7 +82,8 @@ class Admin extends BaseController
             ],
             'desa' => [
                 'required' => 'Desa tidak boleh kosong',
-            ]];
+            ]
+        ];
         $validation->setRules($validate, $rules);
         if (!$validation->withRequest($this->request)->run()) {
             $response = [
@@ -99,6 +99,7 @@ class Admin extends BaseController
                 'nama' => $this->request->getPost('nama'),
                 'kecamatan' => $this->request->getPost('kecamatan'),
                 'desa' => $this->request->getPost('desa'),
+                'created_at' => date('Y-m-d H:i:s'),
             ];
             $zakat = new ModelUsulZakat();
             $zakat->insert($insert);
@@ -106,7 +107,6 @@ class Admin extends BaseController
                 'status' => 'success',
                 'message' => 'Data penerima zakat berhasil ditambahkan',
             ];
-
         }
         return $this->respond($response, 200);
     }
@@ -363,9 +363,16 @@ class Admin extends BaseController
     public function kecamatan()
     {
         $db = \Config\Database::connect();
+        $usul = new ModelUsulZakat();
         $data['title'] = 'Data Kecamatan';
-        $data['kecamatan'] = $db->table('table_kecamatan')->select('nama_kecamatan, id')->get()->getResult();
-        // return $this->respond($data, ResponseInterface::HTTP_OK);
+        // $data['kecamatan'] = $db->table('table_kecamatan')->select('table_kecamatan.nama_kecamatan, table_kecamatan.id,count(table_usul_zakat.id_usul) as jumlah')->join('table_usul_zakat', 'table_usul_zakat.kecamatan = table_kecamatan.id', 'left')->groupBy('table_usul_zakat.id_usul')->get()->getResult();
+        $kecamatan = $db->table('table_kecamatan')->select('nama_kecamatan,id')->get()->getResult();
+        foreach ($kecamatan as $key => $value) {
+            $result[] = $value;
+            $value->{'jumlah'} = $usul->where('kecamatan', $value->id)->countAllResults();
+        }
+        $data['kecamatan'] = $result;
+        // return $this->respond($result, ResponseInterface::HTTP_OK);
         // exit;
         return view('kecamatan', $data);
     }
@@ -375,10 +382,22 @@ class Admin extends BaseController
     {
         $db = \Config\Database::connect();
         $data['title'] = 'Data Desa';
-        $data['desa'] = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->select('nama_desa, id')->get()->getResult();
+        $usul = new ModelUsulZakat();
+        $desa = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->select('nama_desa, id')->get()->getResult();
+        foreach ($desa as $key => $value) {
+            $result[] = $value;
+            $value->{'jumlah'} = $usul->where('desa', $value->id)->countAllResults();
+        }
+        $data['desa'] = $result;
         // return $this->respond($data, ResponseInterface::HTTP_OK);
         // exit;
         return view('desa', $data);
+    }
+    function data_penerima($kecamatan, $desa)
+    {
+        $usul = new ModelUsulZakat();
+        $data['penerima'] = $usul->get()->getResult();
+        return
     }
     // convert database
     public function convert_database()
