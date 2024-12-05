@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `time` int NOT NULL,
   `batch` int unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.migrations: ~6 rows (approximately)
 INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `table_bantuan` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_bantuan`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.table_bantuan: ~9 rows (approximately)
 INSERT INTO `table_bantuan` (`id_bantuan`, `id_zakat`, `peruntukan`, `jenis_bantuan`, `total_bantuan`, `penerima_bantuan`, `jenis_identitas`, `nomor_identitas`, `latitude`, `longitude`, `nama_penerima`, `kecamatan`, `desa`, `created_at`, `updated_at`) VALUES
@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `table_dokumentasi` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_dokumentasi`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.table_dokumentasi: ~9 rows (approximately)
 INSERT INTO `table_dokumentasi` (`id_dokumentasi`, `id_bantuan`, `dokumentasi`, `created_at`, `updated_at`) VALUES
@@ -431,7 +431,7 @@ CREATE TABLE IF NOT EXISTS `table_setting` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_setting`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.table_setting: ~1 rows (approximately)
 INSERT INTO `table_setting` (`id_setting`, `jenis_setting`, `value_setting`, `created_at`, `updated_at`) VALUES
@@ -449,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `table_user` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.table_user: ~1 rows (approximately)
 INSERT INTO `table_user` (`id`, `nama`, `email`, `password`, `role`, `last_login`, `created_at`, `updated_at`) VALUES
@@ -467,7 +467,7 @@ CREATE TABLE IF NOT EXISTS `table_zakat` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id_zakat`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table zakat.table_zakat: ~15 rows (approximately)
 INSERT INTO `table_zakat` (`id_zakat`, `keterangan`, `status`, `total`, `saldo_akhir`, `tanggal_transaksi`, `created_at`, `updated_at`) VALUES
