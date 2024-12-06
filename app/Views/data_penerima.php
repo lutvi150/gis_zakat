@@ -46,8 +46,7 @@
                                     <td><?= $value->nomor_identitas ?></td>
                                     <td><?= number_format($value->jumlah_zakat, 0, ',', '.') ?></td>
                                     <td>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id_usul) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id_usul) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-user"></i> Data Penerima</a>
+
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
