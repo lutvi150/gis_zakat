@@ -28,21 +28,26 @@
                                     Nama
                                 </th>
                                 <th>Golongan</th>
-                                <th></th>
+                                <th>Jenis Kelamin</th>
+                                <th>Nomor Identitas</th>
+                                <th>Estimasi Di Terima</th>
                                 <th>
                                     Action
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($kecamatan as $key => $value): ?>
+                            <?php foreach ($penerima as $key => $value): ?>
                                 <tr>
                                     <td><?= $key + 1 ?></td>
-                                    <td><?= $value->nama_kecamatan ?></td>
-                                    <td><?= $value->jumlah ?></td>
+                                    <td><?= $value->nama ?></td>
+                                    <td><?= $value->peruntukan ?></td>
+                                    <td><?= $value->jenis_kelamin ?></td>
+                                    <td><?= $value->nomor_identitas ?></td>
+                                    <td><?= number_format($value->jumlah_zakat, 0, ',', '.') ?></td>
                                     <td>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
-                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-user"></i> Data Penerima</a>
+                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id_usul) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
+                                        <a href="<?= base_url('index.php/admin/data-desa/' . $value->id_usul) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-user"></i> Data Penerima</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

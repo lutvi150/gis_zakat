@@ -383,7 +383,7 @@ class Admin extends BaseController
         $db = \Config\Database::connect();
         $data['title'] = 'Data Desa';
         $usul = new ModelUsulZakat();
-        $desa = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->select('nama_desa, id')->get()->getResult();
+        $desa = $db->table('table_desa')->where('id_kecamatan', $id_kecamatan)->select('nama_desa, id,id_kecamatan')->get()->getResult();
         foreach ($desa as $key => $value) {
             $result[] = $value;
             $value->{'jumlah'} = $usul->where('desa', $value->id)->countAllResults();
@@ -393,11 +393,43 @@ class Admin extends BaseController
         // exit;
         return view('desa', $data);
     }
-    function data_penerima($kecamatan, $desa)
+    function data_penerima($kecamatan = null, $desa = null)
     {
         $usul = new ModelUsulZakat();
-        $data['penerima'] = $usul->get()->getResult();
-        return
+        $data['title'] = 'Data Penerima Zakat';
+        if ($desa == 1) {
+            $penerima = $usul->where('kecamatan', $kecamatan)->orderBy('peruntukan')->get()->getResult();
+        } else {
+            $penerima = $usul->where('kecamatan', $kecamatan)->where('desa', $desa)->orderBy('peruntukan')->get()->getResult();
+        }
+        $result = [];
+        foreach ($penerima as $key => $value) {
+            $result[] = $value;
+            $value->{'jumlah_zakat'} = $this->hitung_total_diterima($value->peruntukan);
+        }
+        $data['penerima'] = $result;
+        return view('data_penerima', $data);
+        // exit;
+        // return $this->respond($penerima, ResponseInterface::HTTP_OK);
+        // exit;
+    }
+    function hitung_total_diterima($golongan)
+    {
+        $usul = new ModelUsulZakat();
+        $setting = new Setting();
+        $zakat = new Zakat();
+        $get_setting = $setting->where('jenis_setting', 'penerima')->first();
+        $get_setting = json_decode($get_setting->value_setting, true);
+        foreach ($get_setting as $key => $value) {
+            if ($value['peruntukan'] == $golongan) {
+                $persentase = $value['persentase'];
+            }
+        }
+        $total_dana = $zakat->orderBy('created_at', 'desc')->first()['saldo_akhir'];
+        $ketersediaan = $total_dana * ($persentase / 100);
+        $total_diterima = $usul->where('peruntukan', $golongan)->countAllResults();
+        $rata_rata_penerima = $ketersediaan / $total_diterima;
+        return $rata_rata_penerima;
     }
     // convert database
     public function convert_database()

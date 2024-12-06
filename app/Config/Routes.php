@@ -36,6 +36,7 @@ $routes->group('admin', ['filter' => ['admin']], function (RouteCollection $rout
     // new costume zakat add
     $routes->get('zakat-add-data', 'Admin::zakat_add_detail');
     $routes->post('zakat-add-data', 'Admin::zakat_add_detail_store');
+    $routes->get('detail-penerima/(:num)/(:num)', 'Admin::data_penerima/$1/$2');
 });
 $routes->get('convert', 'Admin::convert_database');
 $routes->get('desa/(:num)', 'Admin::get_village/$1');

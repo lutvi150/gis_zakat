@@ -42,7 +42,7 @@
                                     <td><?= $value->nama_desa ?></td>
                                     <td><?= $value->jumlah ?></td>
                                     <td>
-                                        <a href="<?= base_url('index.php/admin/detail-penerima-desa' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
+                                        <a href="<?= base_url('index.php/admin/detail-penerima/' . $value->id_kecamatan . '/' . $value->id) ?>" class="btn btn-xs btn-outline-success"><i class="fa fa-eye"></i> Detail</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
