@@ -139,7 +139,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 grid-margin stretch-card">
+        <div class="col-12 grid-margin stretch-card" hidden>
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Lokasi Penerima Bantuan</h4>
@@ -259,7 +259,9 @@
 </script>
 <script>
     $(document).ready(function() {
-        sessionStorage.clear();
+        // sessionStorage.clear();
+        sessionStorage.setItem("latitude", '0');
+        sessionStorage.setItem("longitude", '0');
         dokumentasi();
     });
     upload = () => {

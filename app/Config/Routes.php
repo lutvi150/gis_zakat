@@ -37,7 +37,10 @@ $routes->group('admin', ['filter' => ['admin']], function (RouteCollection $rout
     $routes->get('zakat-add-data', 'Admin::zakat_add_detail');
     $routes->post('zakat-add-data', 'Admin::zakat_add_detail_store');
     $routes->get('detail-penerima/(:num)/(:num)', 'Admin::data_penerima/$1/$2');
+    $routes->get('zakat-edit-data/(:num)', 'Admin::zakat_edit_detail/$1');
+    $routes->get('detail-penerima-edit/(:num)', 'Admin::data_penerima_edit/$1');
 });
 $routes->get('convert', 'Admin::convert_database');
 $routes->get('desa/(:num)', 'Admin::get_village/$1');
+$routes->get('kecamatan', 'Admin::get_kecamatan');
 // use for admin in kecamatan

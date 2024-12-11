@@ -18,7 +18,7 @@
             <div class="card">
                 <div class="card-body">
                     <a href="<?= base_url('index.php/admin/zakat/add') ?>" class="btn btn-outline-success btn-sm"><i class="mdi mdi-plus-circle"></i>Tambah Zakat Masuk</a>
-                    <a href="<?= base_url('index.php/admin/zakat/salurkan') ?>" type="button" class="btn btn-outline-success btn-sm"><i class="mdi mdi-plus-circle"></i>Salurkan Zakat</a>
+                    <a href="<?= base_url('index.php/admin/zakat-add-data') ?>" type="button" class="btn btn-outline-success btn-sm"><i class="mdi mdi-plus-circle"></i>Salurkan Zakat</a>
                     <table class="table table-bordered" id="data-zakat">
                         <thead>
                             <tr>

@@ -25,12 +25,12 @@
                         <h4 class="card-title">Rincian Bantuan</h4>
                         <p class="card-description">
                         </p>
+                        <input type="text" name="type" id="type" hidden value="<?= $type ?>">
+                        <input type="text" name="id_bantuan" id="id_usul" hidden value="<?= $id_usul ?>">
                         <div class="form-group">
                             <label for="">Golongan Penerima</label>
                             <select name="peruntukan" class="form-control" id="peruntukan">
-                                <?php foreach ($peruntukan as $key => $value): ?>
-                                    <option value="<?= $value ?>"><?= $value ?></option>
-                                <?php endforeach; ?>
+
                             </select>
                             <span class="text-error e-peruntukan"></span>
                         </div>
@@ -64,10 +64,7 @@
                         <div class="form-group">
                             <label for="">Kecamatan</label>
                             <select class="form-control" name="kecamatan" id="kecamatan" onchange="get_desa()">
-                                <option value="">---Pilih Kecamanatan---</option>
-                                <?php foreach ($kecamatan as $key => $value): ?>
-                                    <option value="<?= $value->id ?>"><?= $value->nama_kecamatan ?></option>
-                                <?php endforeach; ?>
+
                             </select>
                             <span class="text-error e-kecamatan"></span>
                         </div>
@@ -170,14 +167,56 @@
     $(document).ready(function() {
         sessionStorage.clear();
         dokumentasi();
+        check_edit();
+        get_kecamatan();
     });
+    check_edit = () => {
+        Notiflix.Loading.hourglass();
+        let type = $("#type").val();
+        sessionStorage.setItem('type', type);
+        if (type == 'edit') {
+            $.ajax({
+                type: "GET",
+                url: url + "admin/detail-penerima-edit/" + $("#id_usul").val(),
+                dataType: "JSON",
+                success: function(response) {
+                    Notiflix.Loading.remove();
+                    let peruntukan = "";
+                    let status = "";
+                    let penerima = response.penerima;
+                    $.each(response.peruntukan, function(indexInArray, valueOfElement) {
+                        status = penerima.peruntukan == valueOfElement ? 'selected' : '';
+                        peruntukan += `<option value="${valueOfElement}" ${status}>${valueOfElement}</option>`;
+                    });
+                    $("#peruntukan").html(peruntukan);
+                    $("#nama").val(penerima.nama);
+                    let jenis_kelamin = penerima.jenis_kelamin == 'L' ? 'selected' : '';
+                    $("#jenis_kelamin").html(`<option value="L" ${jenis_kelamin}>Laki-Laki</option><option value="P" ${penerima.jenis_kelamin == 'P' ?'selected' : ''}>Perempuan</option>`);
+                    let jenis_identitas = penerima.jenis_identitas == 1 ? 'selected' : '';
+                    $("#jenis_identitas").html(`<option value="1" ${jenis_identitas}>KTP</option><option value="2" ${penerima.jenis_identitas == 2 ?'selected' : ''}>SIM</option><option value="3" ${penerima.jenis_identitas == 3 ?'selected' : ''}>Kartu Keluarga</option><option value="4" ${penerima.jenis_identitas == 4 ?'selected' : ''}>Lainnya</option>`);
+                    $("#nomor_identitas").val(penerima.nomor_identitas);
+                    sessionStorage.setItem('kecamatan', penerima.kecamatan);
+                    sessionStorage.setItem('desa', penerima.desa);
+                    get_kecamatan();
+                },
+                error: function(xhr, status, error) {
+                    swal({
+                        title: "opssss!",
+                        text: "Ada kendala dengan sistem",
+                        icon: "error",
+                    });
+                }
+            });
+        }
+
+    }
     upload = () => {
         $(".text-error").text("");
         $("#upload-form").ajaxForm({
             type: "POST",
             url: url + "admin/dokumentasi",
             data: {
-                id_bantuan: $("#id_bantuan").val()
+                id_bantuan: $("#id_usul").val()
             },
             dataType: "JSON",
             success: function(response) {
@@ -246,7 +285,7 @@
             type: "POST",
             url: url + "admin/dokumentasi/get",
             data: {
-                id_bantuan: $("#id_bantuan").val()
+                id_bantuan: $("#id_usul").val()
             },
             dataType: "JSON",
             success: function(response) {
@@ -308,6 +347,33 @@
             }
         }).submit();
     }
+    get_kecamatan = () => {
+        $.ajax({
+            type: "GET",
+            url: url + "kecamatan",
+            dataType: "JSON",
+            success: function(response) {
+                let html = '';
+                let kecamatan = sessionStorage.getItem('kecamatan') == null ? '' : sessionStorage.getItem('kecamatan');
+                $.each(response.data, function(i, v) {
+
+                    html += `<option ${v.id == kecamatan ?'selected' : ''} value="${v.id}">${v.nama_kecamatan}</option>`;
+                });
+                $("#kecamatan").html(`<option value="">---Pilih Kecamatan---</option>${html}`);
+                let type = sessionStorage.getItem('type');
+                if (type == 'edit') {
+                    get_desa();
+                }
+            },
+            error: function(xhr, status, error) {
+                swal({
+                    title: "opssss!",
+                    text: "Ada kendala dengan sistem",
+                    icon: "error",
+                });
+            }
+        });
+    }
     get_desa = () => {
         let kecamatan = $("#kecamatan").children("option:selected").val();
         $.ajax({
@@ -316,10 +382,15 @@
             dataType: "JSON",
             success: function(response) {
                 let html = '';
+                let desa = sessionStorage.getItem('desa') == null ? '' : sessionStorage.getItem('desa');
                 $.each(response.data, function(i, v) {
-                    html += `<option value="${v.id}">${v.nama_desa}</option>`;
+                    html += `<option ${v.id == desa ?'selected' : ''} value="${v.id}">${v.nama_desa}</option>`;
                 });
                 $("#desa").html(`<option value="">---Pilih Desa---</option>${html}`);
+                let type = sessionStorage.getItem('type');
+                if (type == 'edit') {
+                    dokumentasi();
+                }
             },
             error: function(xhr, status, error) {
                 swal({

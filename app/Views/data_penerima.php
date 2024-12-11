@@ -46,7 +46,7 @@
                                     <td><?= $value->nomor_identitas ?></td>
                                     <td><?= number_format($value->jumlah_zakat, 0, ',', '.') ?></td>
                                     <td>
-
+                                        <a href="<?= base_url('admin/zakat-edit-data/' . $value->id_usul) ?>" class="btn btn-outline-warning btn-sm"><i class="mdi mdi-pencil"></i> Detail Penerima</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
