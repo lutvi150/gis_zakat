@@ -207,6 +207,9 @@
                     });
                 }
             });
+        } else {
+
+            Notiflix.Loading.remove();
         }
 
     }

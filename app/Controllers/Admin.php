@@ -41,6 +41,7 @@ class Admin extends BaseController
         $db = \Config\Database::connect();
         $bantuan = new Bantuan();
         $data['type'] = 'add';
+        $data['id_usul'] = null;
         $data['title'] = 'Tambah Data Penerima Zakat';
         $data['peruntukan'] = ['Fakir', 'Miskin', 'Amil', 'Riqab', 'Gharim', 'Fisabilillah', 'Ibnu Sabil'];
         $data['kecamatan'] = $db->table('table_kecamatan')->get()->getResult();

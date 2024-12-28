@@ -34,7 +34,7 @@ $routes->group('admin', ['filter' => ['admin']], function (RouteCollection $rout
     $routes->get('persentase', 'Admin::persentase_penerima');
     $routes->post('persentase', 'Admin::persentase_penerima_update');
     // new costume zakat add
-    $routes->get('zakat-add-data', 'Admin::zakat_add_detail');
+    $routes->get('zakat-add-data', 'Admin::zakat_add_detail', null);
     $routes->post('zakat-add-data', 'Admin::zakat_add_detail_store');
     $routes->get('detail-penerima/(:num)/(:num)', 'Admin::data_penerima/$1/$2');
     $routes->get('zakat-edit-data/(:num)', 'Admin::zakat_edit_detail/$1');
